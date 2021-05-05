@@ -7,9 +7,18 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Comment extends PanacheEntity {
+    public int matchId;
     public String message;
     public String sender;
     public LocalDateTime dateTime;
+
+    public int getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(int matchId) {
+        this.matchId = matchId;
+    }
 
     public String getMessage() {
         return message;
