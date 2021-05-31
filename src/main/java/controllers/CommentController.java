@@ -46,6 +46,7 @@ public class CommentController {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
     @Transactional
+    @Path("send/")
     public Response postComment(@QueryParam("matchId") int matchId,
                                 @QueryParam("sender") String sender,
                                 @QueryParam("message") String message){
@@ -53,7 +54,7 @@ public class CommentController {
         comment.matchId = matchId;
         comment.sender = sender;
         comment.message = message;
-        comment.dateTime = LocalDateTime.now();
+        comment.createdon = LocalDateTime.now();
         comment.persist();
 
         String json = new Gson().toJson(Comment.listAll());

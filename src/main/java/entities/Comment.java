@@ -10,7 +10,7 @@ public class Comment extends PanacheEntity {
     public int matchId;
     public String message;
     public String sender;
-    public LocalDateTime dateTime;
+    public LocalDateTime createdon;
 
     public int getMatchId() {
         return matchId;
@@ -37,10 +37,10 @@ public class Comment extends PanacheEntity {
     }
 
     public LocalDateTime getDateTime() {
-        return dateTime;
+        return createdon;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+        this.createdon = dateTime;
     }
 }
