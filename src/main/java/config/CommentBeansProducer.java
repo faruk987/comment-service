@@ -1,3 +1,4 @@
+/*
 package config;
 
 import com.orbitz.consul.Consul;
@@ -11,3 +12,4 @@ public class CommentBeansProducer {
     Consul consulClient = Consul.builder().build();
 
 }
+*/

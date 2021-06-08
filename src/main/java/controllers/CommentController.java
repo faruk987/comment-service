@@ -83,4 +83,11 @@ public class CommentController {
 
         return Response.ok(json).build();
     }
+
+    @DELETE
+    @Transactional
+    @Produces(MediaType.TEXT_PLAIN)
+    public void deleteAllCommentsBySender(@QueryParam("sender") String sender) throws Exception {
+        Comment.delete("sender", sender);
+    }
 }
