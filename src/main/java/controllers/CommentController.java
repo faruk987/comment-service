@@ -2,8 +2,12 @@ package controllers;
 
 import com.google.gson.Gson;
 import entities.Comment;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,11 +15,12 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Path("/")
+@Path("/comment")
 public class CommentController {
 
     @GET
     @Path("/all")
+    @RolesAllowed("Admin")
     @Produces(MediaType.TEXT_PLAIN)
     public String getComments() throws Exception {
         String json = new Gson().toJson(Comment.listAll());
@@ -24,6 +29,7 @@ public class CommentController {
     }
 
     @GET
+    @PermitAll
     @Path("all/{matchId}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCommentsByMatchId(@PathParam int matchId) throws Exception {
@@ -34,6 +40,7 @@ public class CommentController {
     }
 
     @GET
+    @PermitAll
     @Produces(MediaType.TEXT_PLAIN)
     public String getCommentById(@QueryParam("id") long id) throws Exception {
         Comment comment = Comment.findById(id);
@@ -45,8 +52,9 @@ public class CommentController {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
+    @RolesAllowed({"User", "Admin"})
     @Transactional
-    @Path("send/")
+    @Path("/send")
     public Response postComment(@QueryParam("matchId") int matchId,
                                 @QueryParam("sender") String sender,
                                 @QueryParam("message") String message){
@@ -64,6 +72,7 @@ public class CommentController {
 
     @DELETE
     @Transactional
+    @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteCommentById(@QueryParam("id") long id) throws Exception {
         Comment.deleteById(id);
@@ -74,6 +83,7 @@ public class CommentController {
 
     @PUT
     @Transactional
+    @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.TEXT_PLAIN)
     public Response updateMessageById(@QueryParam("id") long id,
                                       @QueryParam("message") String message) throws Exception {
@@ -86,6 +96,7 @@ public class CommentController {
 
     @DELETE
     @Transactional
+    @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.TEXT_PLAIN)
     public void deleteAllCommentsBySender(@QueryParam("sender") String sender) throws Exception {
         Comment.delete("sender", sender);
