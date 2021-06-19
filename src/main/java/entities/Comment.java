@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Entity
-public class Comment extends PanacheEntity {
+public class Comment extends PanacheEntity implements Comparable<Comment>{
     public int matchId;
     public String message;
     public String sender;
@@ -42,5 +42,10 @@ public class Comment extends PanacheEntity {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.createdon = dateTime;
+    }
+
+    @Override
+    public int compareTo(Comment comment) {
+        return 0;
     }
 }

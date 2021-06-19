@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Path("/comment")
@@ -34,6 +35,7 @@ public class CommentController {
     @Produces(MediaType.TEXT_PLAIN)
     public String getCommentsByMatchId(@PathParam int matchId) throws Exception {
         List<Comment> comments = Comment.list("matchId", matchId);
+        comments.sort(Collections.reverseOrder());
         String json = new Gson().toJson(comments);
 
         return json;
@@ -51,13 +53,17 @@ public class CommentController {
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"User", "Admin"})
     @Transactional
     @Path("/send")
     public Response postComment(@QueryParam("matchId") int matchId,
                                 @QueryParam("sender") String sender,
                                 @QueryParam("message") String message){
+
+        System.out.println("Sender: "+sender);
+        System.out.println("message: "+message);
+
         Comment comment = new Comment();
         comment.matchId = matchId;
         comment.sender = sender;
@@ -65,7 +71,10 @@ public class CommentController {
         comment.createdon = LocalDateTime.now();
         comment.persist();
 
-        String json = new Gson().toJson(Comment.listAll());
+        List<Comment> comments = Comment.listAll();
+        comments.sort(Collections.reverseOrder());
+
+        String json = new Gson().toJson(comments);
 
         return Response.ok(json).build();
     }
@@ -95,10 +104,11 @@ public class CommentController {
     }
 
     @DELETE
+    @Path("/all")
     @Transactional
     @RolesAllowed({"User", "Admin"})
     @Produces(MediaType.TEXT_PLAIN)
-    public void deleteAllCommentsBySender(@QueryParam("sender") String sender) throws Exception {
+    public void deleteAllCommentsBySender(@QueryParam("username") String sender) throws Exception {
         Comment.delete("sender", sender);
     }
 }
