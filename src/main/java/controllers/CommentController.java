@@ -60,10 +60,6 @@ public class CommentController {
     public Response postComment(@QueryParam("matchId") int matchId,
                                 @QueryParam("sender") String sender,
                                 @QueryParam("message") String message){
-
-        System.out.println("Sender: "+sender);
-        System.out.println("message: "+message);
-
         Comment comment = new Comment();
         comment.matchId = matchId;
         comment.sender = sender;
